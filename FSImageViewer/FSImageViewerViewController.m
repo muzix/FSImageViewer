@@ -136,7 +136,7 @@
         UIBarButtonItem *doneButton = [[UIBarButtonItem alloc] initWithTitle:[self localizedStringForKey:@"done" withDefault:@"Done"] style:UIBarButtonItemStyleDone target:self action:@selector(done:)];
         self.navigationItem.rightBarButtonItem = doneButton;
         if (!_sharingDisabled) {
-            self.navigationItem.leftBarButtonItem = shareButton;
+            //self.navigationItem.leftBarButtonItem = shareButton;
         }
     }
     else {
@@ -259,6 +259,7 @@
 
     [self setStatusBarHidden:hidden];
     [self.navigationController setNavigationBarHidden:hidden animated:animated];
+    [self.navigationController setToolbarHidden:hidden animated:animated];
 
     [UIView animateWithDuration:0.3 animations:^{
         UIColor *backgroundColor = hidden ? _backgroundColorHidden : _backgroundColorVisible;
@@ -373,6 +374,22 @@
         }
     }
 
+}
+
+- (void)reloadData {
+    pageIndex = currentPageIndex;
+    [self setupScrollViewContentSize];
+    [self moveToImageAtIndex:pageIndex animated:NO];
+    if ([_imageSource numberOfImages] <= 0) {
+        [self clearScrollview];
+    }
+}
+
+- (void)clearScrollview {
+    NSArray *viewsToRemove = [self.scrollView subviews];
+    for (UIView *v in viewsToRemove) {
+        [v removeFromSuperview];
+    }
 }
 
 - (void)layoutScrollViewSubviews {
